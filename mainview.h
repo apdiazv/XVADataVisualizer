@@ -7,6 +7,7 @@
 #include <QSqlQueryModel>
 #include <QModelIndex>
 #include <QSqlDatabase>
+#include <qcustomplot.h>
 
 namespace Ui {
 class MainView;
@@ -22,6 +23,7 @@ public:
     void openDb();
     QString getInforme() const;
     QStringList scriptToString(QString pathToScript);
+    void callGraph(QVector<double> data);
 
 private slots:
     void setInforme(QString value);
