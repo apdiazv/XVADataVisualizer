@@ -6,8 +6,6 @@ DataPlot::DataPlot(QWidget *parent) :
     ui(new Ui::DataPlot)
 {
     ui->setupUi(this);
-
-    //dataGraph(ui->customPlot,x,y);
 }
 
 DataPlot::~DataPlot()
@@ -15,27 +13,36 @@ DataPlot::~DataPlot()
     delete ui;
 }
 
-void DataPlot::dataGraph(QCustomPlot *customPlot, QVector<double> x, QVector<double> y)
+void DataPlot::dataGraph(QCustomPlot *customPlot, QVector<double> x, QVector<QVector<double> > dataList)
 {
-   customPlot->addGraph();
-   customPlot->graph(0)->setData(x,y);
-   customPlot->graph(0)->rescaleAxes();
-   customPlot->setInteraction(QCP::iRangeDrag,true);
-   customPlot->setInteraction(QCP::iRangeZoom,true);
-   customPlot->replot();
+    QPen pen;
+    for(int i = 0; i<dataList.size(); i++)
+    {
+        pen.setColor(QColor(qSin(i*0.3)*100+100, qSin(i*0.6+0.7)*100+100, qSin(i*0.4+0.6)*100+100));
+        customPlot->addGraph();
+        customPlot->graph()->setData(x,dataList[i]);
+        customPlot->graph()->rescaleAxes();
+        customPlot->graph()->setPen(pen);
+    }
+    customPlot->setInteraction(QCP::iRangeDrag,true);
+    customPlot->setInteraction(QCP::iRangeZoom,true);
+    customPlot->setInteraction(QCP::iSelectPlottables, true);
+    customPlot->replot();
 }
 
-void DataPlot::setVectors(QVector<double> _y)
+void DataPlot::setVectors(QVector<QVector<double> > dataList)
 {
-    for(int i = 0; i<_y.size(); i++)
+    for(int i = 0; i<dataList.size(); i++)
     {
-        x.push_front(i);
-        y.push_front(_y[i]);
+        _dataList.push_front(dataList[i]);
+    }
+    for(int i = 0; i < dataList[0].size();i++)
+    {
+        x.push_back(i);
     }
 }
 
 void DataPlot::on_btnActualizar_clicked()
 {
-    dataGraph(ui->customPlot,x,y);
-
+    dataGraph(ui->customPlot,x,_dataList);
 }

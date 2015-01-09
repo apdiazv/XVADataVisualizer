@@ -17,17 +17,19 @@ public:
 
     ~DataPlot();
 
-    void dataGraph(QCustomPlot *customPlot, QVector<double> x, QVector<double> y);
-    void setVectors(QVector<double> _y);
 
+    void dataGraph(QCustomPlot *customPlot, QVector<double> x, QVector<QVector<double> > dataList);
+
+    void setVectors(QVector<QVector<double> > dataList);
 
 private slots:
     void on_btnActualizar_clicked();
 
 private:
     Ui::DataPlot *ui;
-    QVector<double> y;
     QVector<double> x;
+
+    QVector<QVector<double> > _dataList;
 
 };
 

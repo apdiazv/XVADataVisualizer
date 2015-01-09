@@ -35,9 +35,9 @@ void MainView::openDb()
     db =  QSqlDatabase::addDatabase("QSQLITE");
     QDir dir;
     //Para Windows
-    QString aux = dir.absoluteFilePath("C:/Creasys/XVA/cva_data.sqlite");
+    //QString aux = dir.absoluteFilePath("C:/Creasys/XVA/cva_data.sqlite");
     //Para Mac
-    //QString aux = dir.absoluteFilePath("/Users/nicolasbacquet/Desktop/XVA/DATABASE/cva_data.sqlite");
+    QString aux = dir.absoluteFilePath("/Users/nicolasbacquet/Desktop/XVA/DATABASE/cva_data.sqlite");
     db.setDatabaseName(aux);
     db.open();
 
@@ -59,22 +59,39 @@ void MainView::generaInforme()
 
     QSqlQuery q;
     QStringList commands;
-    QVector<double> y;
+    QVector<double> data;
+    QVector<QVector<double> > dataList;
+    double aux;
+
     commands = scriptToString(informe);
+
     for (int i = 0; i <= commands.size() - 1; i++)
     {
         q.exec(commands.at(i));
+        aux = q.value(1).toDouble();
         while(q.next())
         {
-            y.push_front(q.value(0).toDouble());
+            if(aux == q.value(1).toDouble())
+            {
+                data.push_back(q.value(0).toDouble());
+            }
+            else
+            {
+                aux = q.value(1).toDouble();
+                dataList.push_back(data);
+                data.clear();
+                data.push_back(q.value(0).toDouble());
+            }
         }
+        dataList.push_back(data);
     }
+
     QString strQuery;
     strQuery = commands.at(commands.size() - 1);
     qryInforme->setQuery(strQuery);
     ui->tblVwConsulta->setModel(qryInforme);
     ui->tblVwConsulta->show();
-    callGraph(y);
+    callGraph(dataList);
     restoreCursor();
 }
 
@@ -118,10 +135,10 @@ void MainView::debugMessageBox(QString msg)
     msgBox.exec();
 }
 
-void MainView::callGraph(QVector<double> data)
+
+void MainView::callGraph(QVector<QVector<double> > dataList)
 {
     DataPlot *formGraph = new DataPlot;
-    formGraph->setVectors(data);
+    formGraph->setVectors(dataList);
     formGraph->show();
-
 }

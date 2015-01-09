@@ -23,7 +23,7 @@ public:
     void openDb();
     QString getInforme() const;
     QStringList scriptToString(QString pathToScript);
-    void callGraph(QVector<double> data);
+    void callGraph(QVector<QVector<double> > data);
 
 private slots:
     void setInforme(QString value);
@@ -37,6 +37,7 @@ private:
     void waitCursor();
     void restoreCursor();
     void debugMessageBox(QString msg);
+
 };
 
 #endif // MAINVIEW_H
