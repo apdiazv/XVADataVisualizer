@@ -24,9 +24,7 @@ void DataPlot::dataGraph(QCustomPlot *customPlot, QVector<double> x, QVector<QVe
         customPlot->graph()->rescaleAxes();
         customPlot->graph()->setPen(pen);
     }
-    customPlot->setInteraction(QCP::iRangeDrag,true);
-    customPlot->setInteraction(QCP::iRangeZoom,true);
-    customPlot->setInteraction(QCP::iSelectPlottables, true);
+    customPlot->setInteractions(QCP::iSelectPlottables | QCP::iRangeDrag | QCP::iRangeZoom);
     customPlot->replot();
 }
 
@@ -45,4 +43,10 @@ void DataPlot::setVectors(QVector<QVector<double> > dataList)
 void DataPlot::on_btnActualizar_clicked()
 {
     dataGraph(ui->customPlot,x,_dataList);
+}
+
+void DataPlot::on_btnBorrar_clicked()
+{
+    ui->customPlot->removeGraph(ui->customPlot->selectedGraphs().first());
+    ui->customPlot->replot();
 }

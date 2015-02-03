@@ -25,6 +25,8 @@ public:
 private slots:
     void on_btnActualizar_clicked();
 
+    void on_btnBorrar_clicked();
+
 private:
     Ui::DataPlot *ui;
     QVector<double> x;
